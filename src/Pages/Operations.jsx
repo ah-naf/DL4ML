@@ -1,22 +1,14 @@
 import { Radio } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useEffect, useState } from "react";
-import { FaMicrophone, FaStop } from "react-icons/fa";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import React, { useState } from "react";
+import { BiText } from "react-icons/bi";
+import { FaRegFileAudio } from "react-icons/fa6";
+import AudioInput from "../Components/AudioInput";
 
 function Operations() {
   const [type, setType] = useState("audio");
   const [audioTranscript, setAudioTranscript] = useState("");
   const [query, setQuery] = useState("");
-  const { transcript, listening, resetTranscript } = useSpeechRecognition();
-
-  useEffect(() => {
-    if (transcript) {
-      setAudioTranscript(transcript);
-    }
-  }, [transcript]);
 
   return (
     <div className="mt-10 max-w-lg mx-auto">
@@ -26,52 +18,31 @@ function Operations() {
           value={type}
           onChange={(e) => setType(e.target.value)}
           className="font-semibold"
+          buttonStyle="solid"
         >
-          <Radio value={"text"} className="text-lg !font-secondary">
-            Use Text
-          </Radio>
-          <Radio value={"audio"} className="text-lg !font-secondary">
-            Use Audio
-          </Radio>
+          <Radio.Button value={"text"} className=" !font-secondary">
+            <div className="flex items-center gap-2">
+              <span className="">Use Text</span>{" "}
+              <span>
+                <BiText size={22} />
+              </span>
+            </div>
+          </Radio.Button>
+          <Radio.Button value={"audio"} className=" !font-secondary">
+            <div className="flex items-center gap-2">
+              <span>Use Audio</span>{" "}
+              <span>
+                <FaRegFileAudio size={22} />
+              </span>
+            </div>
+          </Radio.Button>
         </Radio.Group>
       </div>
       {type === "audio" && (
-        <div className="mt-4">
-          <div className="flex items-center gap-4 font-secondary justify-center">
-            <h1>Click the button to record audio: </h1>
-            <div>
-              {listening ? (
-                <button
-                  className="bg-orange-400 text-white p-3 rounded-full shadow-lg"
-                  onClick={SpeechRecognition.stopListening}
-                >
-                  <FaStop size={20} />
-                </button>
-              ) : (
-                <button
-                  className="bg-orange-400 text-white p-3 rounded-full shadow-lg"
-                  onClick={() => {
-                    resetTranscript();
-                    SpeechRecognition.startListening();
-                  }}
-                >
-                  <FaMicrophone size={20} />
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="mt-6 text-right">
-            <TextArea
-              value={audioTranscript}
-              onChange={(e) => setAudioTranscript(e.target.value)}
-              rows={5}
-              className="font-secondary text-gray-800"
-            />
-            <button className="mt-4 bg-blue-500 rounded text-white p-2 px-4 font-secondary font-semibold">
-              Convert To SQL
-            </button>
-          </div>
-        </div>
+        <AudioInput
+          audioTranscript={audioTranscript}
+          setAudioTranscript={setAudioTranscript}
+        />
       )}
       <div className="mt-6 text-right">
         <h1 className="text-left font-secondary text-lg font-semibold mb-2">
