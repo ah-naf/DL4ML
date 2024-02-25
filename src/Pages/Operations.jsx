@@ -1,5 +1,7 @@
-import { Radio } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Radio, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import Upload from "antd/es/upload/Upload";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { BiText } from "react-icons/bi";
@@ -20,9 +22,14 @@ function Operations() {
   const [audioTranscript, setAudioTranscript] = useState("");
   const [query, setQuery] = useState("");
   const [rowData, setRowData] = useState();
+  const [fileList, setFileList] = useState([]);
 
   const handleExecute = async () => {
     setRowData();
+    if (fileList.length === 0) {
+      message.error("File is missing");
+      return;
+    }
     if (!query) {
       toast.error("Query can't be empty");
       return;
@@ -41,13 +48,13 @@ function Operations() {
       }
     }
     try {
-      console.log(inputs);
+      const formData = new FormData();
+      formData.append("input", inputs);
+      formData.append("file", fileList[0].originFileObj);
+
       const res = await fetch("http://localhost:8000/test_url/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ input: inputs }),
+        body: formData,
       });
       const data = await res.json();
       console.log(data);
@@ -92,8 +99,8 @@ function Operations() {
           setAudioTranscript={setAudioTranscript}
         />
       )}
-      <div className="mt-6 text-right">
-        <h1 className="text-left font-secondary text-lg font-semibold mb-2">
+      <div className="mt-6  grid">
+        <h1 className="text-left font-secondary text-lg font-semibold mb-2 ">
           Enter your query:
         </h1>
         <TextArea
@@ -103,8 +110,23 @@ function Operations() {
           placeholder="Enter your SQL query"
           className="font-secondary text-gray-800"
         />
+        <div className="mt-4">
+          <Upload
+            className="!text-xl"
+            fileList={fileList.map((file) => ({ ...file, status: "done" }))}
+            beforeUpload={(file) => {
+              setFileList([{ uid: file.uid, name: file.name, status: "done" }]);
+              return false;
+            }}
+            onChange={(e) => setFileList(e.fileList)}
+          >
+            {fileList.length === 0 && (
+              <Button icon={<UploadOutlined />}>Upload File</Button>
+            )}
+          </Upload>
+        </div>
         <button
-          className="mt-4 bg-blue-500 rounded text-white p-2 px-4 font-secondary font-semibold"
+          className="mt-4 w-24 ml-auto bg-blue-500 rounded text-white p-2 px-4 font-secondary font-semibold"
           onClick={handleExecute}
         >
           Execute
