@@ -8,6 +8,7 @@ import { BiText } from "react-icons/bi";
 import { FaRegFileAudio } from "react-icons/fa6";
 import AgGridTable from "../Components/AgGridTable";
 import AudioInput from "../Components/AudioInput";
+import ShowLog from "../Components/ShowLog";
 
 /*
 CREATE ESTIMATOR salaryPredictor TYPE LR FORMULA $salary~years$;
@@ -23,6 +24,20 @@ function Operations() {
   const [query, setQuery] = useState("");
   const [rowData, setRowData] = useState();
   const [fileList, setFileList] = useState([]);
+  const [data, setData] = useState([
+    {
+      text: "Hello",
+    },
+    {
+      table: [],
+    },
+    {
+      text: "Hello",
+    },
+    {
+      table: [],
+    },
+  ]);
 
   const handleExecute = async () => {
     setRowData();
@@ -65,7 +80,7 @@ function Operations() {
   };
 
   return (
-    <div className="mt-10 max-w-lg mx-auto">
+    <div className="mt-10 max-w-xl mx-auto">
       <Toaster />
       <div className="text-center">
         <Radio.Group
@@ -99,7 +114,7 @@ function Operations() {
           setAudioTranscript={setAudioTranscript}
         />
       )}
-      <div className="mt-6  grid">
+      <div className="mt-2  grid sticky top-0 bg-white z-50 py-4 border-b shadow-b">
         <h1 className="text-left font-secondary text-lg font-semibold mb-2 ">
           Enter your query:
         </h1>
@@ -132,11 +147,7 @@ function Operations() {
           Execute
         </button>
       </div>
-      {rowData && (
-        <div className="mt-8  mx-auto">
-          <AgGridTable rowData={rowData} />
-        </div>
-      )}
+      <ShowLog data={data} setData={setData} />
     </div>
   );
 }
