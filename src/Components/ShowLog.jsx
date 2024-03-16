@@ -5,10 +5,21 @@ import AgGridTable from "./AgGridTable";
 function ShowLog({ data = [], setData }) {
   return (
     <>
-      <h1 className="text-center font-primary text-2xl font-semibold underline">
-        Execution Log
+      <h1 className=" font-secondary flex justify-between text-2xl font-semibold ">
+        <span>Execution Log</span>
+        {data.length > 0 && (
+          <button
+            className=" text-lg bg-blue-500 w-20 py-1 rounded text-white font-semibold"
+            onClick={() => setData([])}
+          >
+            Clear
+          </button>
+        )}
       </h1>
-      <div className="mt-4 space-y-4 bg-gray-100 shadow-md p-3 py-5 rounded">
+      <div
+        className="mt-2 space-y-4 bg-gray-100 shadow-md p-3 py-5 overflow-y-auto rounded"
+        style={{ maxHeight: "calc(100vh - 250px)" }}
+      >
         {data.map((val, key) => {
           return (
             <div key={key} className="flex items-start gap-3">
@@ -31,14 +42,6 @@ function ShowLog({ data = [], setData }) {
             </div>
           );
         })}
-        <div className="flex justify-center">
-          <button
-            className="p-2 px-6 rounded bg-blue-600 text-white"
-            onClick={() => setData([])}
-          >
-            Clear All
-          </button>
-        </div>
       </div>
     </>
   );
