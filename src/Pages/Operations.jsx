@@ -65,7 +65,8 @@ function Operations() {
         method: "POST",
         body: formData,
       });
-      const d = await res.json();
+      let d = await res.json();
+      d = JSON.parse(d)
       console.log(d);
       setData((prev) => [...prev, d]);
     } catch (error) {

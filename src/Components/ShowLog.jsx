@@ -1,6 +1,6 @@
 import React from "react";
 import { FaAnglesRight } from "react-icons/fa6";
-import AgGridTable from "./AgGridTable";
+import AgGridTable from "../Components/AgGridTable";
 
 function ShowLog({ data = [], setData }) {
   return (
@@ -27,17 +27,24 @@ function ShowLog({ data = [], setData }) {
                 <FaAnglesRight size={15} />
               </p>
               <div className="space-y-4">
-                {val["text"] && (
-                  <p className="font-secondary text-lg text-gray-800/85 font-semibold  relative -top-2">
-                    {val["text"]}
-                  </p>
-                )}
-                {val["table"] && val["table"].length > 0 && (
-                  <AgGridTable rowData={val["table"]} />
-                )}
-                {val["graph"] && (
-                  <img src={`data:image/png;base64,${val["graph"]}`} alt="" />
-                )}
+                {Object.keys(val).map((v, ind) => (
+                  <>
+                    {val[v]["text"] && (
+                      <p className="font-secondary text-lg text-gray-800/85 font-semibold  relative -top-2">
+                        {val[v]["text"]}
+                      </p>
+                    )}
+                    {val[v]["table"] && val[v]["table"].length > 0 && (
+                      <AgGridTable rowData={val[v]["table"]} />
+                    )}
+                    {val[v]["graph"] && (
+                      <img
+                        src={`data:image/png;base64,${val[v]["graph"]}`}
+                        alt=""
+                      />
+                    )}
+                  </>
+                ))}
               </div>
             </div>
           );
